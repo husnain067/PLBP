@@ -612,8 +612,8 @@ fetch-upstream:
         echo "New updates fetched from upstream"; \
     fi
 
-# Checkout a new PR add branch name and push to origin and create a PR
-# Example: just checkout-pr-by-number 1234
+# Checkout a new PR add branch name and push to origin
+# Example: just checkout-pr-by-number 123
 [group('workflow')]
 checkout-pr-by-number pr_number:
     @echo "Checking out PR #{{pr_number}} from upstream..."
