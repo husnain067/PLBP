@@ -622,6 +622,25 @@ clean-pr-to-testrepo new_repo_name="test-actions-repo":
         # Switch back to main branch after successful PR creation
         git checkout main
     fi
+    
+#You must have the GitHub CLI (gh) installed and authenticated.
+#You’ve already set the default repo using gh repo set-default.
+# Checkout in main branch    
+# Fetch the latest changes from the #PR if it's up to date
+[group('workflow')]
+fetch-upstream:
+    @git fetch upstream
+    @if git diff --quiet upstream/main; then \
+        echo "Repository is up-to-date"; \
+    else \
+        echo "New updates fetched from upstream"; \
+    fi
+
+# Checkout a new PR add branch name and push to origin and create a PR
+[group('workflow')]
+checkout-pr-by-number pr_number:
+    @echo "⏳ Checking out PR #{{pr_number}} from upstream..."
+    gh pr checkout {{pr_number}}
 
 # Change working directory example
 [working-directory: 'bar']
