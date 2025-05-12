@@ -85,7 +85,6 @@ BRANCH_NAME := "test-actions-" + DATE_TIME
     if ! command -v python3 >/dev/null 2>&1; then echo "python3 is not installed"; exit 1; fi
     if ! command -v just >/dev/null 2>&1; then echo "just is not installed"; exit 1; fi
     if ! command -v pre-commit >/dev/null 2>&1; then echo "{{YELLOW}}WARNING: pre-commit is not installed{{NC}}"; fi
-    if ! command -v taplo >/dev/null 2>&1; then echo "Taplo is not installed"; exit 1; fi
     echo "All required tools are installed"
 
 alias c := check-deps
@@ -94,15 +93,6 @@ alias c := check-deps
 [group('install'), group('quick start')]
 @install-dev: check-deps
     uv pip install --editable ".[dev]"
-
-# Install Taplo in editable mode with dev dependencies
-[group('install')]
-@install-taplo:
-	if ! command -v taplo >/dev/null 2>&1; then \
-		cargo install taplo-cli  && echo "{{GREEN}} Taplo installed successfully{{NC}}"; \
-	else \
-		echo "{{YELLOW}}Taplo is already installed{{NC}}"; \
-	fi
 
 # Format code
 [group('dev')]
@@ -114,20 +104,6 @@ alias c := check-deps
     uvx --with-editable . ruff check --select I --fix {{py_package_name}}/
 
 alias f := format
-
-# Format TOML files (comments preserved via pyproject.toml config)
-[group('dev')]
-@format-toml:
-    taplo format --config .taplo.toml
-
-alias ft := format-toml
-
-# Check TOML formatting without modifying files
-[group('dev')]
-@check-toml:
-    taplo check --config .taplo.toml
-
-alias ct := check-toml
 
 # Run linter (code style and quality checks)
 [group('dev')]
@@ -636,11 +612,15 @@ fetch-upstream:
         echo "New updates fetched from upstream"; \
     fi
 
-# Checkout a new PR add branch name and push to origin and create a PR
+# Checkout a new PR with branch number and push to origin
+# Example: just checkout-pr-by-number 123
 [group('workflow')]
 checkout-pr-by-number pr_number:
-    @echo "⏳ Checking out PR #{{pr_number}} from upstream..."
-    gh pr checkout {{pr_number}}
+    @echo "Checking out PR #{{pr_number}} from upstream..."
+    if ! gh pr checkout {{pr_number}}; then \
+        echo "PR #{{pr_number}} does not exist or is not accessible."; \
+        exit 1; \
+    fi
 
 # Change working directory example
 [working-directory: 'bar']
