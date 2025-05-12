@@ -613,10 +613,14 @@ fetch-upstream:
     fi
 
 # Checkout a new PR add branch name and push to origin and create a PR
+# Example: just checkout-pr-by-number 1234
 [group('workflow')]
 checkout-pr-by-number pr_number:
-    @echo "⏳ Checking out PR #{{pr_number}} from upstream..."
-    gh pr checkout {{pr_number}}
+    @echo "Checking out PR #{{pr_number}} from upstream..."
+    if ! gh pr checkout {{pr_number}}; then \
+        echo "PR #{{pr_number}} does not exist or is not accessible."; \
+        exit 1; \
+    fi
 
 # Change working directory example
 [working-directory: 'bar']
