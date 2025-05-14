@@ -626,21 +626,21 @@ checkout-pr-by-number pr_number:
 # Example: just checkout-and-merge test-cla-verification test-cla-verification-2
 [group('workflow')]
 checkout-and-merge base_branch merge_branch:
-    echo "🌀 Checking out '{{base_branch}}'..."
-    git checkout {{base_branch}} || (echo "❌ Failed to checkout '{{base_branch}}'" && exit 1)
+	@echo "🌀 Checking out '{{base_branch}}'..."
+	git checkout {{base_branch}} || (echo "❌ Failed to checkout '{{base_branch}}'" && exit 1)
 
-    echo "🔄 Merging '{{merge_branch}}' into '{{base_branch}}'..."
-    git fetch origin {{merge_branch}} || (echo "❌ Failed to fetch '{{merge_branch}}'" && exit 1)
+	@echo "🔄 Merging '{{merge_branch}}' into '{{base_branch}}'..."
+	git fetch origin {{merge_branch}} || (echo "❌ Failed to fetch '{{merge_branch}}'" && exit 1)
 
-    if git merge origin/{{merge_branch}}; then
-        echo "✅ Successfully merged '{{merge_branch}}' into '{{base_branch}}'."
-    else
-        echo "❌ Merge conflict occurred. Please resolve manually."
-        exit 1
-    fi
+	sh -c 'if git merge origin/{{merge_branch}}; then \
+	echo "✅ Successfully merged '{{merge_branch}}' into '{{base_branch}}'."; \
+	else \
+	  echo "❌ Merge conflict occurred. Please resolve manually."; \
+	  exit 1; \
+	fi'
 
-    echo "🚀 Pushing '{{base_branch}}' to remote..."
-    git push origin {{base_branch}} || (echo "❌ Failed to push to remote" && exit 1)
+	@echo "🚀 Pushing '{{base_branch}}' to remote..."
+	git push origin {{base_branch}} || (echo "❌ Failed to push to remote" && exit 1)
 
 # Change working directory example
 [working-directory: 'bar']
