@@ -621,7 +621,20 @@ checkout-pr-by-number pr_number:
         echo "PR #{{pr_number}} does not exist or is not accessible."; \
         exit 1; \
     fi
-
+# Checkout a base branch and merge a second branch into it.
+# Usage: just checkout-and-merge base-branch merge-branch
+[group('workflow')]
+checkout-and-merge base_branch merge_branch:
+    @echo "🌀 Checking out '{{base_branch}}'..."
+    git checkout {{base_branch}} || (echo "❌ Failed to checkout '{{base_branch}}'" && exit 1)
+    @echo "🔄 Merging '{{merge_branch}}' into '{{base_branch}}'..."
+    git fetch origin {{merge_branch}} || (echo "❌ Failed to fetch '{{merge_branch}}'" && exit 1)
+    if git merge origin/{{merge_branch}}; then \
+        echo "✅ Successfully merged '{{merge_branch}}' into '{{base_branch}}'."; \
+    else \
+        echo "❌ Merge conflict occurred. Please resolve manually."; \
+        exit 1; \
+    fi
 # Change working directory example
 [working-directory: 'bar']
 @_foo:
