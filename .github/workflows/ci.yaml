@@ -50,6 +50,10 @@ jobs:
       run: |
         taplo check '**/*.toml'
 
+    # Check SecretLint
+    - name: Run secretlint
+      run: just lint-secrets
+
     # Run pre-commit checks
     - name: Run pre-commit checks
       run: |

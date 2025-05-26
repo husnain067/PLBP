@@ -637,3 +637,8 @@ checkout-pr-by-number pr_number:
 
 # Alias for dev (full developer cycle: format → lint → test → build)
 alias cycle := dev
+
+# Lint secrets
+[group('pre-commit')]
+@lint-secrets:
+    npx secretlint "**/*"
