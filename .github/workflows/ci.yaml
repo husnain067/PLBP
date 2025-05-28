@@ -1,4 +1,4 @@
-name: CI/CD
+name: Bot PR Test
 
 on:
   push:
