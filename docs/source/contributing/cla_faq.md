@@ -35,3 +35,5 @@ Once you have signed the CLA, it is generally not possible to withdraw it. The r
 ## Who can I contact if I have questions about the CLA?
 
 If you have any questions or concerns about the CLA, please open an issue on GitHub or reach out to the project maintainers.
+
+Testing the new CLA changes.
